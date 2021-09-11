@@ -13,7 +13,7 @@ git config --global user.email "email@example.com"
 git config -l
 ```
 
-## 基本使用
+## 本地仓库
 ### 一、**创建版本库**
 版本库又叫仓库 (repository)，仓库里面的所有文件都可以被 Git 管理，Git 跟踪记录每个文件的创建、修改、删除，并且一定程度上可以恢复历史版本。
 1. **创建根目录**：进入想创建仓库的文件目录，**右键 > Git Bash Here**，进入命令行窗口，创建文件夹作为仓库根目录；
@@ -37,42 +37,31 @@ git add file_name
 git commit -m "Description of the operation"
 ```
 
-## 常用指令
-- **清空命令行与清除命令历史**
+## 远程仓库
+### 一、建立本地与远程仓库链接
 ```
-clear      # 也可以使用快捷键 ctrl+l
-history -c # 注释可以写在#之后
+ssh-keygen -t rsa -C "youremail@example.com"
 ```
-- **查看文件内容**
-```
-cat file_name
-```
-- **查看仓库状态**
-```
-git status
-```
-- **对比查看修改内容**
-```
-git diff file_name
-```
-- **查看日志**：
- `<--pretty=oneline>` 中尖括号表示可选参数，没有该参数显示跟多信息，有该参数则只显示 commit id 和提交时的说明信息；
-  `git log` 查看提交日志；如果版本回退，不能看到新版本的提交日志；
-  `git reflog` 查看操作日志；版本恢复可以使用这个命令查看版本号
-```
-git log <--pretty=oneline>
-git reflog <--pretty=oneline>
-```
-- **回退与恢复版本**：
- **[num]** 为正整数，表示回退多少个版本号，回退一个版本可以简写为 HEAD^；
- 也可以通过 commit id 精确回退到指定版本；
- 而恢复版本只能通过commit id 实现；
- **--hard** 表示xxxxxxxxxxx
-```
-git reset --hard HEAD~[num]
-git reset --hard HEAD^
-git reset --hard commit_id
-```
+- 本地仓库与远程仓库通过 SSH 加密传输，可以在本地创建 SSH key；
+- 生成 id_rsa 和 id_rsa.pub 两个文件，分别是密钥和公钥；
+- 把公钥添加到 GitHub > Account Settings > SSH keys 中就可以实现本地仓库与远程仓库的双向传输了；
+- 不同设备都可以生成密钥和公钥，为远程仓库添加不同的公钥就可以让不同设备同时管理一个远程仓库，推送内容到远程仓库或者从远程仓库克隆到本地仓库
 
-
+### 二、与远程仓库关联
+1. **创建远程仓库**：
+ 与远程仓库关联之前应当船舰 GitHub 上创建一个空的远程仓库，具体方法是：
+ GitHub 右上角 > New repository > 设置仓库名和说明即可
+2. **建立远程连接**：
+ `account_name` 是用户名
+ `repo_name` 是远程仓库名
+```
+git remote add origin git@github.com:account_name/repo_name.git
+```
+3. **推送到远程仓库**：
+ 远程仓库默认名称是 origin，也可以改别名（别名在上一步建立连接时定义），改别名之后别名与 origin 都能用来推送
+ 第一次推送会有 SSH 警告，输入 yes 回车即可；后续推送可以不加上 -u
+```
+git push -u origin master
+git push origin master
+```
 
